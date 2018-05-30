@@ -1,0 +1,17 @@
+---
+
+- hosts: ha
+  gather_facts: false
+  connection: local
+  roles:
+    - build_template_vm
+
+- hosts: ha
+  gather_facts: true
+  roles:
+    - common
+
+- hosts: iscsi
+  gather_facts: true
+  roles:
+    - iscsi

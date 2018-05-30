@@ -1,0 +1,2 @@
+disks:
+  - {disk_name: "iscsi", disk_size: "20"}

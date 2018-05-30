@@ -1,0 +1,68 @@
+---
+
+- name: Install targetcli
+  yum:
+    name: targetcli
+    state: installed
+  tags: iscsi
+
+- name: Start and Enable target
+  service:
+    name: target
+    state: started
+    enabled: true
+  tags: iscsi
+
+- name: Create LVM partition
+  parted: device=/dev/vdb number=1 state=present
+  tags: iscsi
+
+- name: Create data VG
+  lvg: vg=vg-data pvs=/dev/vdb1
+  tags: iscsi
+
+- name: Create lvols
+  lvol: vg=vg-data lv=scsi size="+100%FREE"
+  tags: iscsi
+
+- name: Allow iscsi through firewall
+  firewalld:
+    port: 3260/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+  tags: iscsi
+
+- name: Create lun
+  shell: targetcli /backstores/block/ create lun0 /dev/vg-data/scsi
+  register: scsi_command
+  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
+  tags: iscsi
+
+- name: Create iSCSI target
+  shell: targetcli /iscsi create iqn.1994-05.com.redhat:iscsi-target
+  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
+  tags: iscsi
+
+- name: Add iSCSI clients
+  shell: targetcli /iscsi/iqn.1994-05.com.redhat:iscsi-target/tpg1/acls create iqn.1994-05.com.redhat:node{{ item }}.demolab.local
+  with_items:
+    - a
+    - b
+    - c
+    - d
+  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
+  tags: iscsi
+
+- name: Create iSCSI Portal
+  shell: targetcli /iscsi/iqn.1994-05.com.redhat:iscsi-target/tpg1/acls/portals create
+  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
+  tags: iscsi
+
+- name: Map lun
+  shell: targetcli /iscsi/iqn.1994-05.com.redhat:iscsi-target/tpg1/luns create /backstores/block/lun0
+  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
+  tags: iscsi
+
+- name: Save config
+  shell: targetcli / saveconfig

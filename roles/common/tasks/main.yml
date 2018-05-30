@@ -1,0 +1,34 @@
+---
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Subscribe to RHN
+  redhat_subscription:
+    state: present
+    org_id: "{{ rhsm_org }}"
+    activationkey: "{{ rhsm_user }}"
+
+- name: Enable correct repos
+  shell: subscription-manager repos --disable="*" --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-rpms
+
+- name: Enable fence_xvm port in firewall
+  firewalld:
+    port: 1229/tcp
+    permanent: true
+    immediate: true
+    state: enabled
+
+- name: Install iSCSI tools
+  yum:
+    name: iscsi-initiator-utils
+    state: installed
+
+- name: Populate iscsi initiatorname
+  copy:
+    dest: /etc/iscsi/initiatorname.iscsi
+    content: "InitiatorName=iqn.1994-05.com.redhat:{{ inventory_hostname }}"
+  notify: restart iscsi
+  
+     

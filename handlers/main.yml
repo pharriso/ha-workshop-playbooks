@@ -1,0 +1,9 @@
+---
+
+- name: restart iscsi
+  service:
+    name: "{{ item }}"
+    state: restarted
+  with_items:
+    - iscsi
+    - iscsid

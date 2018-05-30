@@ -1,0 +1,26 @@
+---
+
+- name: Copy OS template disk in place
+  shell: cp -p /var/lib/libvirt/images/template.qcow2 /var/lib/libvirt/images/{{ inventory_hostname }}.qcow2 
+  args:
+    creates: /var/lib/libvirt/images/{{ inventory_hostname }}.qcow2
+  register: create_vm
+
+- name: Create additional disks if needed
+  shell: qemu-img create -f qcow2 -o preallocation=metadata /var/lib/libvirt/images/{{ inventory_hostname }}-{{ item.disk_name }}.qcow2 {{ item.disk_size }}G
+  when: disks is defined and create_vm | changed
+  with_items: "{{ disks }}"
+
+- name: Define VM
+  virt: command=define name={{ inventory_hostname }} xml='{{ lookup('template', 'virt.xml.j2') }}'
+  register: result
+
+- name: Set static IP
+  command: virt-customize -d {{ inventory_hostname }} --run-command "echo IPADDR={{ ansible_host }} >> /etc/sysconfig/network-scripts/ifcfg-eth0 && echo GATEWAY={{ ansible_host.split('.')[0] }}.{{ ansible_host.split('.')[1] }}.{{ ansible_host.split('.')[2] }}.2 >> /etc/sysconfig/network-scripts/ifcfg-eth0" 
+  when: result is changed
+ 
+- name: Start VM
+  virt: state=running name={{ inventory_hostname }}
+
+- name: Wait for server to come back
+  wait_for: host={{ ansible_host }} delay=10 timeout=300 port=22
