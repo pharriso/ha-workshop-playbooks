@@ -9,3 +9,8 @@ iscsi.example.com ansible_host=192.168.122.14 memory=2 vcpu=1 libvirt_network=de
 [ha:children]
 rhel-ha
 iscsi
+
+[first]
+nodea.example.com
+nodeb.example.com
+nodec.example.com
