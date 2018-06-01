@@ -1,10 +1,10 @@
 [rhel-ha]
-nodea.demolab.local ansible_host=10.50.0.52 hypervisor=10.20.0.43 memory=2 vcpu=1 libvirt_network=br-infra
-nodeb.demolab.local ansible_host=10.50.0.53 hypervisor=10.20.0.43 memory=2 vcpu=1 libvirt_network=br-infra
-nodec.demolab.local ansible_host=10.50.0.54 hypervisor=10.20.0.43 memory=2 vcpu=1 libvirt_network=br-infra
-noded.demolab.local ansible_host=10.50.0.55 hypervisor=10.20.0.43 memory=2 vcpu=1 libvirt_network=br-infra
+nodea.example.com ansible_host=192.168.122.10 memory=2 vcpu=1 libvirt_network=default
+nodeb.example.com ansible_host=192.168.122.11 memory=2 vcpu=1 libvirt_network=default
+nodec.example.com ansible_host=192.168.122.12 memory=2 vcpu=1 libvirt_network=default
+noded.example.com ansible_host=192.168.122.13 memory=2 vcpu=1 libvirt_network=default
 [iscsi]
-iscsi.demolab.local ansible_host=10.50.0.56 hypervisor=10.20.0.43 memory=2 vcpu=1 libvirt_network=br-infra
+iscsi.example.com ansible_host=192.168.122.14 memory=2 vcpu=1 libvirt_network=default
 
 [ha:children]
 rhel-ha
