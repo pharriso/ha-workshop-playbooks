@@ -36,16 +36,16 @@
 - name: Create lun
   shell: targetcli /backstores/block/ create lun0 /dev/vg-data/scsi
   register: scsi_command
-  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
   tags: iscsi
+  ignore_errors: true
 
 - name: Create iSCSI target
   shell: targetcli /iscsi create iqn.1994-05.com.redhat:iscsi-target
-  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
+  ignore_errors: true
   tags: iscsi
 
 - name: Add iSCSI clients
-  shell: targetcli /iscsi/iqn.1994-05.com.redhat:iscsi-target/tpg1/acls create iqn.1994-05.com.redhat:node{{ item }}.demolab.local
+  shell: targetcli /iscsi/iqn.1994-05.com.redhat:iscsi-target/tpg1/acls create iqn.1994-05.com.redhat:node{{ item }}.example.com
   with_items:
     - a
     - b
@@ -53,16 +53,18 @@
     - d
   failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
   tags: iscsi
+  ignore_errors: true
 
 - name: Create iSCSI Portal
   shell: targetcli /iscsi/iqn.1994-05.com.redhat:iscsi-target/tpg1/acls/portals create
-  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
+  ignore_errors: true
   tags: iscsi
 
 - name: Map lun
   shell: targetcli /iscsi/iqn.1994-05.com.redhat:iscsi-target/tpg1/luns create /backstores/block/lun0
-  failed_when: "'exists' not in scsi_command.stderr and scsi_command.stdout != 0"
+  ignore_errors: true
   tags: iscsi
 
 - name: Save config
   shell: targetcli / saveconfig
+  ignore_errors: true

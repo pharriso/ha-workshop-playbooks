@@ -32,4 +32,12 @@
   notify: 
     - restart iscsi
   
-     
+- name: Create /etc/cluster directory
+  file:
+    state: directory
+    path: /etc/cluster
+
+- name: Copy cluster key to all nodes
+  copy:
+    src: /etc/cluster/fence_xvm.key
+    dest: /etc/cluster/fence_xvm.key
