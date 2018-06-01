@@ -1,0 +1,5 @@
+DEVICE=eth2
+ONBOOT=yes
+BOOTPROTO=static
+NETMASK=255.255.255.0
+IPADDR={{ cluster_ip }}

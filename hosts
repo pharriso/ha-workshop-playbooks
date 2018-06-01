@@ -1,10 +1,10 @@
 [rhel-ha]
-nodea.example.com ansible_host=192.168.122.10 memory=2 vcpu=1 libvirt_network=default
-nodeb.example.com ansible_host=192.168.122.11 memory=2 vcpu=1 libvirt_network=default
-nodec.example.com ansible_host=192.168.122.12 memory=2 vcpu=1 libvirt_network=default
-noded.example.com ansible_host=192.168.122.13 memory=2 vcpu=1 libvirt_network=default
+nodea.example.com ansible_host=192.168.122.10 memory=2 vcpu=1 libvirt_network=default cluster_ip=192.168.102.10 storage_ip=192.168.101.10
+nodeb.example.com ansible_host=192.168.122.11 memory=2 vcpu=1 libvirt_network=default cluster_ip=192.168.102.11 storage_ip=192.168.101.11
+nodec.example.com ansible_host=192.168.122.12 memory=2 vcpu=1 libvirt_network=default cluster_ip=192.168.102.12 storage_ip=192.168.101.12
+noded.example.com ansible_host=192.168.122.13 memory=2 vcpu=1 libvirt_network=default cluster_ip=192.168.102.13 storage_ip=192.168.101.13
 [iscsi]
-iscsi.example.com ansible_host=192.168.122.14 memory=2 vcpu=1 libvirt_network=default
+iscsi.example.com ansible_host=192.168.122.14 memory=2 vcpu=1 libvirt_network=default storage_ip=192.168.101.14
 
 [ha:children]
 rhel-ha

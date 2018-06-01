@@ -1,0 +1,4 @@
+nics:
+  - {network: "storage"}
+  - {network: "cluster"}
+

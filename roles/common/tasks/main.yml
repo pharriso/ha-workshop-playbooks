@@ -41,3 +41,24 @@
   copy:
     src: /etc/cluster/fence_xvm.key
     dest: /etc/cluster/fence_xvm.key
+
+- name: Define storage nic
+  template:
+    src: ifcfg-eth1
+    dest: /etc/sysconfig/network-scripts/
+  when: storage_ip is defined
+  notify: 
+    - restart network
+  
+- name: Define cluster nic
+  template:
+    src: ifcfg-eth2
+    dest: /etc/sysconfig/network-scripts/
+  when: cluster_ip is defined
+  notify: 
+    - restart network
+
+- name: Copy php file in place
+  copy:
+    src: index.php
+    dest: /root
