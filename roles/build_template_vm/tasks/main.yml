@@ -16,7 +16,7 @@
   register: result
 
 - name: Set static IP
-  command: virt-customize -d {{ inventory_hostname }} --run-command "echo IPADDR={{ ansible_host }} >> /etc/sysconfig/network-scripts/ifcfg-eth0 && echo GATEWAY={{ ansible_host.split('.')[0] }}.{{ ansible_host.split('.')[1] }}.{{ ansible_host.split('.')[2] }}.1 >> /etc/sysconfig/network-scripts/ifcfg-eth0" 
+  command: virt-customize -d {{ inventory_hostname }} --run-command "echo IPADDR={{ ansible_host }} >> /etc/sysconfig/network-scripts/ifcfg-eth0 && echo GATEWAY={{ ansible_host.split('.')[0] }}.{{ ansible_host.split('.')[1] }}.{{ ansible_host.split('.')[2] }}.1 >> /etc/sysconfig/network-scripts/ifcfg-eth0 && echo DNS1=192.168.122.1 >> /etc/sysconfig/network-scripts/ifcfg-eth0"  
   when: result is changed
  
 - name: Start VM

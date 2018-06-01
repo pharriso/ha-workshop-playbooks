@@ -8,7 +8,7 @@
   redhat_subscription:
     state: present
     org_id: "{{ rhsm_org }}"
-    activationkey: "{{ rhsm_user }}"
+    activationkey: "{{ rhsm_key }}"
 
 - name: Enable correct repos
   shell: subscription-manager repos --disable="*" --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-rpms
@@ -29,6 +29,7 @@
   copy:
     dest: /etc/iscsi/initiatorname.iscsi
     content: "InitiatorName=iqn.1994-05.com.redhat:{{ inventory_hostname }}"
-  notify: restart iscsi
+  notify: 
+    - restart iscsi
   
      
