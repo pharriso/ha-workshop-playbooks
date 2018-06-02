@@ -13,33 +13,15 @@
 - name: Enable correct repos
   shell: subscription-manager repos --disable="*" --enable=rhel-ha-for-rhel-7-server-rpms --enable=rhel-7-server-rpms
 
-- name: Yum update
-  yum:
-    name: "*"
-    state: latest
-
-- name: Reboot server
-  shell: sleep 2 && reboot
-  async: 1
-  poll: 0
-  ignore_errors: true
-  when: patches | changed
-
-- name: Wait for server to come back
-  wait_for: 
-    host: "{{ inventory_hostname }}"
-    delay: 10 
-    timeout: 300 
-    port: 22
-  delegate_to: localhost
-  when: patches | changed
-
 - name: Enable fence_xvm port in firewall
   firewalld:
     port: 1229/tcp
     permanent: true
     immediate: true
     state: enabled
+
+- name: yum clean all
+  shell: yum clean all
 
 - name: Install iSCSI tools
   yum:
